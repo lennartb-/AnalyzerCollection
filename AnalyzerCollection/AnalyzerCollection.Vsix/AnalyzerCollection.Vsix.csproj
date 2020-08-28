@@ -19,7 +19,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="15.1.192" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="16.8.2022" PrivateAssets="all" />
   </ItemGroup>
 
   <PropertyGroup>
@@ -44,5 +44,11 @@
     <!-- https://github.com/Microsoft/extendvs/issues/57 -->
     <ProjectReference Update="@(ProjectReference)" Name="%(Filename)" />
   </ItemGroup>
+
+  <Target Name="IncludePackageReferenceDependencies" AfterTargets="GetVsixSourceItems">
+  <ItemGroup>
+    <VSIXSourceItem Include="@(ReferencePath)" Condition="$([System.String]::new('%(ReferencePath.FusionName)').StartsWith('Humanizer'))" />
+  </ItemGroup>
+  </Target>
 
 </Project>

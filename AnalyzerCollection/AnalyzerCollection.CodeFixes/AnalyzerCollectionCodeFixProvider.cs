@@ -1,17 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using System.Composition;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Humanizer;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CodeActions;
+using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.Rename;
-using Microsoft.CodeAnalysis.Text;
+using Microsoft.CodeAnalysis.Formatting;
+using Microsoft.CodeAnalysis.MSBuild;
 
 namespace AnalyzerCollection
 {
@@ -44,28 +43,36 @@ namespace AnalyzerCollection
             context.RegisterCodeFix(
                 CodeAction.Create(
                     title: CodeFixResources.CodeFixTitle,
-                    createChangedSolution: c => MakeUppercaseAsync(context.Document, declaration, c),
+                    createChangedSolution: c => AddAttributeAsync(context.Document, declaration, c),
                     equivalenceKey: nameof(CodeFixResources.CodeFixTitle)),
                 diagnostic);
         }
 
-        private async Task<Solution> MakeUppercaseAsync(Document document, TypeDeclarationSyntax typeDecl, CancellationToken cancellationToken)
+        private async Task<Solution> AddAttributeAsync(Document document, TypeDeclarationSyntax classDeclaration, CancellationToken cancellationToken)
         {
             // Compute new uppercase name.
-            var identifierToken = typeDecl.Identifier;
-            var newName = identifierToken.Text.ToUpperInvariant();
+            var identifierToken = classDeclaration.Identifier;
 
-            // Get the symbol representing the type to be renamed.
-            var semanticModel = await document.GetSemanticModelAsync(cancellationToken);
-            var typeSymbol = semanticModel.GetDeclaredSymbol(typeDecl, cancellationToken);
+            var root = await document.GetSyntaxRootAsync(cancellationToken);
+            var attributeValue = identifierToken.Text.Humanize(LetterCasing.AllCaps).Replace(' ', '_');
 
-            // Produce a new solution that has all references to that type renamed, including the declaration.
-            var originalSolution = document.Project.Solution;
-            var optionSet = originalSolution.Workspace.Options;
-            var newSolution = await Renamer.RenameSymbolAsync(document.Project.Solution, typeSymbol, newName, optionSet, cancellationToken).ConfigureAwait(false);
+            var attributeArgument = SyntaxFactory.AttributeArgument(SyntaxFactory.LiteralExpression(
+                SyntaxKind.StringLiteralExpression, SyntaxFactory.Literal(attributeValue)));
 
-            // Return the new solution with the now-uppercase type name.
-            return newSolution;
+            var attribute = SyntaxFactory.Attribute(SyntaxFactory.IdentifierName("SampleAttribute"))
+                .WithArgumentList(SyntaxFactory.AttributeArgumentList(SyntaxFactory.SingletonSeparatedList(attributeArgument)));
+
+            var attributeList = SyntaxFactory.AttributeList(SyntaxFactory.SingletonSeparatedList(attribute)).NormalizeWhitespace();
+            var attributeLists = classDeclaration.AttributeLists.Add(attributeList);
+            var newClassdeclaration = classDeclaration.WithAttributeLists(attributeLists);
+
+            var formattedClassDeclaration = Formatter.Format(newClassdeclaration, MSBuildWorkspace.Create());
+
+            return document.WithSyntaxRoot(
+                root.ReplaceNode(
+                    classDeclaration,
+                    formattedClassDeclaration
+                )).Project.Solution;
         }
 
     }

@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "AnalyzerCollection.Vsix": {
+      "commandName": "Project"
+    }
+  }
+}

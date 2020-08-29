@@ -11,6 +11,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Formatting;
 using Microsoft.CodeAnalysis.MSBuild;
+using Microsoft.CodeAnalysis.Options;
 
 namespace AnalyzerCollection
 {
@@ -50,7 +51,6 @@ namespace AnalyzerCollection
 
         private async Task<Solution> AddAttributeAsync(Document document, TypeDeclarationSyntax classDeclaration, CancellationToken cancellationToken)
         {
-            // Compute new uppercase name.
             var identifierToken = classDeclaration.Identifier;
 
             var root = await document.GetSyntaxRootAsync(cancellationToken);
@@ -62,17 +62,14 @@ namespace AnalyzerCollection
             var attribute = SyntaxFactory.Attribute(SyntaxFactory.IdentifierName("SampleAttribute"))
                 .WithArgumentList(SyntaxFactory.AttributeArgumentList(SyntaxFactory.SingletonSeparatedList(attributeArgument)));
 
-            var attributeList = SyntaxFactory.AttributeList(SyntaxFactory.SingletonSeparatedList(attribute)).NormalizeWhitespace();
+            var attributeList = SyntaxFactory.AttributeList(SyntaxFactory.SingletonSeparatedList(attribute)).NormalizeWhitespace().WithTrailingTrivia(SyntaxFactory.ElasticCarriageReturnLineFeed);
+
             var attributeLists = classDeclaration.AttributeLists.Add(attributeList);
-            var newClassdeclaration = classDeclaration.WithAttributeLists(attributeLists);
+            var newClassDeclaration = classDeclaration.WithAttributeLists(attributeLists);
 
-            var formattedClassDeclaration = Formatter.Format(newClassdeclaration, MSBuildWorkspace.Create());
+            var replaceNode = root.ReplaceNode(classDeclaration, newClassDeclaration).NormalizeWhitespace();
 
-            return document.WithSyntaxRoot(
-                root.ReplaceNode(
-                    classDeclaration,
-                    formattedClassDeclaration
-                )).Project.Solution;
+            return document.WithSyntaxRoot(replaceNode).Project.Solution;
         }
 
     }

@@ -19,7 +19,7 @@ namespace AnalyzerCollection {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -61,29 +61,56 @@ namespace AnalyzerCollection {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Class is missing attribute.
+        /// </summary>
+        internal static string AC0001AnalyzerTitle {
+            get {
+                return ResourceManager.GetString("AC0001AnalyzerTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Class implementing ISampleInterface should have SampleAttribute attribute.
         /// </summary>
-        internal static string AnalyzerDescription {
+        internal static string AC0001Description {
             get {
-                return ResourceManager.GetString("AnalyzerDescription", resourceCulture);
+                return ResourceManager.GetString("AC0001Description", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Attribute &apos;{0}&apos; should be added to class.
         /// </summary>
-        internal static string AnalyzerMessageFormat {
+        internal static string AC0001MessageFormat {
             get {
-                return ResourceManager.GetString("AnalyzerMessageFormat", resourceCulture);
+                return ResourceManager.GetString("AC0001MessageFormat", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Class is missing attribute.
+        ///   Looks up a localized string similar to .
         /// </summary>
-        internal static string AnalyzerTitle {
+        internal static string AC0002AnalyzerTitle {
             get {
-                return ResourceManager.GetString("AnalyzerTitle", resourceCulture);
+                return ResourceManager.GetString("AC0002AnalyzerTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string AC0002Description {
+            get {
+                return ResourceManager.GetString("AC0002Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string AC0002MessageFormat {
+            get {
+                return ResourceManager.GetString("AC0002MessageFormat", resourceCulture);
             }
         }
     }

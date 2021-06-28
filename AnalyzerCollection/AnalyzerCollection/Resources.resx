@@ -117,16 +117,25 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AnalyzerDescription" xml:space="preserve">
+  <data name="AC0001AnalyzerTitle" xml:space="preserve">
+    <value>Class is missing attribute</value>
+    <comment>The title of the diagnostic.</comment>
+  </data>
+  <data name="AC0001Description" xml:space="preserve">
     <value>Class implementing ISampleInterface should have SampleAttribute attribute</value>
     <comment>An optional longer localizable description of the diagnostic.</comment>
   </data>
-  <data name="AnalyzerMessageFormat" xml:space="preserve">
+  <data name="AC0001MessageFormat" xml:space="preserve">
     <value>Attribute '{0}' should be added to class</value>
     <comment>The format-able message the diagnostic displays.</comment>
   </data>
-  <data name="AnalyzerTitle" xml:space="preserve">
-    <value>Class is missing attribute</value>
-    <comment>The title of the diagnostic.</comment>
+  <data name="AC0002AnalyzerTitle" xml:space="preserve">
+    <value />
+  </data>
+  <data name="AC0002Description" xml:space="preserve">
+    <value />
+  </data>
+  <data name="AC0002MessageFormat" xml:space="preserve">
+    <value />
   </data>
 </root>
